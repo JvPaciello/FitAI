@@ -44,7 +44,7 @@ async function atualizarGemini(dados) {
       ]
     });
 
-    const respostaGemini = response?.candidates?.[0]?.content?.parts?.[0]?.text || ".";
+    const respostaGemini = response?.candidates?.[0]?.content?.parts?.[0]?.text || "Erro ao gerar resposta";
     console.log("✅ Gemini atualizado com sucesso!", respostaGemini);
   } catch (error) {
     console.error("❌ Erro ao atualizar o Gemini:", error);
@@ -136,7 +136,7 @@ async function start(client) {
             await user.save();
             client.sendText(message.from, "Por favor, descreva sua deficiência.");
             return;
-          } else if (response === "não" || response === "nao") {
+          } else if (response === "não") {
             user.hasDisability = false;
             await user.save();
             client.sendText(message.from, "Você possui alguma restrição alimentar? (Responda com 'sim' ou 'não')");
@@ -161,7 +161,7 @@ async function start(client) {
             await user.save();
             client.sendText(message.from, "Por favor, descreva suas restrições alimentares.");
             return;
-          } else if (response === "não" || response === "nao") {
+          } else if (response === "não") {
             user.hasFoodRestriction = false;
             await user.save();
             client.sendText(message.from, "Qual é o seu sexo? (Responda com 'masculino' ou 'feminino')");
@@ -203,12 +203,12 @@ async function start(client) {
           const choice = message.body.trim();
           let goal = "";
 
-          if (choice === "1") goal = "Ganhar massa muscular 💪";
+          if (choice === "1") goal = "Ganho de massa muscular 💪";
           else if (choice === "2") goal = "Perda de peso 🏃‍♂️";
           else if (choice === "3") goal = "Definição muscular 🏆";
           else {
             client.sendText(message.from, "❌ Opção inválida! Escolha um dos números abaixo:\n\n" +
-              "1️⃣ Ganhar massa muscular 💪\n" +
+              "1️⃣ Ganho de massa muscular 💪\n" +
               "2️⃣ Perder peso 🏃‍♂️\n" +
               "3️⃣ Definir músculos 🏆"
             );
@@ -217,10 +217,36 @@ async function start(client) {
 
           user.goal = goal;
           await user.save();
-            client.sendText(message.from, `Ótimo! Seu objetivo é *${goal}*. 🎯 A partir de agora serei seu assistente fitness e te ajudarei a *${goal}*. 💪 Como posso ajudar?`);
+          client.sendText(message.from, `Ótimo! Seu objetivo é **${goal}**. Agora posso montar seu plano. Digite "montar plano" para começar.`);
           return;
         }
 
+        // 🔹 Atualizar dieta ou treino
+        if (message.body.toLowerCase().includes("alterar treino")) {
+          client.sendText(message.from, "Certo! Vou gerar um novo plano de treino para você. Aguarde...");
+          user.workoutPlan = await getGeminiResponse("Gerar um novo plano de treino para " + user.goal, message.from);
+          await user.save();
+          client.sendText(message.from, "✅ Seu novo plano de treino foi atualizado!");
+          return;
+        }
+
+        if (message.body.toLowerCase().includes("alterar dieta")) {
+          client.sendText(message.from, "Certo! Vou gerar um novo plano alimentar para você. Aguarde...");
+          user.mealPlan = await getGeminiResponse("Gerar um novo plano de dieta para " + user.goal, message.from);
+          await user.save();
+          client.sendText(message.from, "✅ Sua nova dieta foi atualizada!");
+          return;
+        }
+
+
+
+        // 🔹 Se o usuário pedir para montar um novo plano
+        if (message.body.toLowerCase() === "montar plano") {
+          client.sendText(message.from, "Certo! Vou gerar um novo plano para você. Aguarde um momento...");
+          let botResponse = await getGeminiResponse("Criar um novo plano de treino e dieta", message.from);
+          client.sendText(message.from, botResponse);
+          return;
+        }
 
         // 🔹 Processar outras mensagens normalmente
         let botResponse = await getGeminiResponse(message.body, message.from);
@@ -263,10 +289,10 @@ async function getGeminiResponse(userMessage, userPhone) {
 
     // 🔹 Criar um prompt com as informações do usuário
     let prompt = `
-      🤖🏋️‍♂️🍎 Você é um assistente de academia e nutrição.
-      🏋️‍♂️ O usuário **${user.name}** está buscando ajuda para ${user.goal}.
-      🚫 ENVIE O TREINO DO USUARIO APENAS QUANDO O MESMO PEDIR.
-      ❌ QUANDO O USUARIO DISSER ALGO NAO RELACIONADO A AREA DE SAUDE CORPORAL E MENTAL, RESPONDA COM UMA MENSAGEM DO TIPO: EU ESTOU AQUI PARA AJUDA-LO COM SUA DIETA E TREINO, NAO POSSUO CAPACIDADE DE TAIS ASSUNTOS.
+      Você é um assistente de academia e nutrição 🤖🏋️‍♂️🍎.
+      O usuário **${user.name}** está buscando ajuda para ${user.goal}.
+      ENVIE O TREINO DO USUARIO APENAS QUANDO O MESMO PEDIR.
+      QUANDO O USUARIO DISSER ALGO NAO RELACIONADO A AREA DE SAUDE CORPORAL E MENTAR, RESPONDA COM UMA MENSAGEM DO TIPO: EU ESTOU AQUI PARA AJUDA-LO COM SUA DIETA E TREINO, NAO POSSUO CAPACIDADE DE TAIS ASSUNTOS.
 
       📊 **Informações do usuário**:
       - 📞 Número: ${user.phoneNumber}
@@ -277,13 +303,11 @@ async function getGeminiResponse(userMessage, userPhone) {
       - 🚻 Sexo: ${user.gender}
       - 🏋️ Plano de treino atual: ${user.workoutPlan || "Ainda não definido"}
       - 🍽 Plano de alimentação atual: ${user.mealPlan || "Ainda não definido"}
-      - ♿ descrição da deficiência: ${user.disabilityDescription || "Não possui"}
-      - 🚫 restrição alimentar: ${user.foodRestrictionDescription || "Não possui"}
 
-      📜 **Histórico da conversa com o usuário:**  
+      **Histórico da conversa com o usuário:**  
       ${await getChatHistory(userPhone)}
 
-      ❓ Pergunta do usuário: "${userMessage}"
+      Pergunta do usuário: "${userMessage}"
 
       🔹 **Responda de forma personalizada, chamando o usuário pelo nome.**
       🔹 **Inclua emojis para tornar a resposta mais interativa.** 🎯🔥

@@ -1,2 +1,8 @@
+<<<<<<< HEAD
 2025/02/16-15:59:22.932 368 Creating DB E:\FitAI\tokens\FitAI-Session\Default\Sync Data\LevelDB since it was missing.
 2025/02/16-15:59:23.070 368 Reusing MANIFEST E:\FitAI\tokens\FitAI-Session\Default\Sync Data\LevelDB/MANIFEST-000001
+=======
+2025/02/04-18:47:43.347 6b4 Reusing MANIFEST E:\FitAI\tokens\FitAI-Session\Default\Sync Data\LevelDB/MANIFEST-000001
+2025/02/04-18:47:43.354 6b4 Recovering log #3
+2025/02/04-18:47:43.354 6b4 Reusing old log E:\FitAI\tokens\FitAI-Session\Default\Sync Data\LevelDB/000003.log 
+>>>>>>> 0edb6deebad760afeacf12d6d72f49fd08633a04

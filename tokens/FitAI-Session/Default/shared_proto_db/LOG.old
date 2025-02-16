@@ -1,2 +1,8 @@
+<<<<<<< HEAD
 2025/02/16-15:59:23.464 368 Creating DB E:\FitAI\tokens\FitAI-Session\Default\shared_proto_db since it was missing.
 2025/02/16-15:59:23.566 368 Reusing MANIFEST E:\FitAI\tokens\FitAI-Session\Default\shared_proto_db/MANIFEST-000001
+=======
+2025/02/04-18:47:43.533 215c Reusing MANIFEST E:\FitAI\tokens\FitAI-Session\Default\shared_proto_db/MANIFEST-000001
+2025/02/04-18:47:43.534 215c Recovering log #3
+2025/02/04-18:47:43.534 215c Reusing old log E:\FitAI\tokens\FitAI-Session\Default\shared_proto_db/000003.log 
+>>>>>>> 0edb6deebad760afeacf12d6d72f49fd08633a04

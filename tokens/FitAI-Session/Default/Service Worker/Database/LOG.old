@@ -1,2 +1,8 @@
+<<<<<<< HEAD
 2025/02/16-15:59:26.260 368 Creating DB E:\FitAI\tokens\FitAI-Session\Default\Service Worker\Database since it was missing.
 2025/02/16-15:59:26.265 368 Reusing MANIFEST E:\FitAI\tokens\FitAI-Session\Default\Service Worker\Database/MANIFEST-000001
+=======
+2025/02/04-18:47:43.417 198c Reusing MANIFEST E:\FitAI\tokens\FitAI-Session\Default\Service Worker\Database/MANIFEST-000001
+2025/02/04-18:47:43.418 198c Recovering log #3
+2025/02/04-18:47:43.419 198c Reusing old log E:\FitAI\tokens\FitAI-Session\Default\Service Worker\Database/000003.log 
+>>>>>>> 0edb6deebad760afeacf12d6d72f49fd08633a04
