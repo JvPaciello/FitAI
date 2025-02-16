@@ -6,9 +6,14 @@ const UserSchema = new mongoose.Schema({
   age: { type: Number },
   weight: { type: Number },
   height: { type: Number },
-  goal: { type: String, default: "" }, // Meta do usuário (ex: ganhar massa muscular, perder peso)
-  mealPlan: { type: String, default: "" }, // Plano de alimentação gerado pelo bot
-  workoutPlan: { type: String, default: "" }, // Plano de treino gerado pelo bot
+  gender: { type: String, default: "" },
+  goal: { type: String, default: "" },
+  mealPlan: { type: String, default: "" },
+  workoutPlan: { type: String, default: "" },
+  hasDisability: { type: Boolean, default: undefined },
+  disabilityDescription: { type: String, default: "" },
+  hasFoodRestriction: { type: Boolean, default: undefined },
+  foodRestrictionDescription: { type: String, default: "" }, 
   createdAt: { type: Date, default: Date.now }
 });
 
